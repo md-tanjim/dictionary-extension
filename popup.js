@@ -1,8 +1,8 @@
 // popup.js
 
 /************* CONFIG – EDIT THESE *************/
-const OPENAI_API_KEY = "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";   // <- put your key
-const GEMINI_API_KEY = "AIzaSyBzsFa4ZiU8FJW7rAvpZvAEptE8Fcp6MLI";   // <- put your key
+const OPENAI_API_KEY = "YOUR-API-KEY";   // <- put your key
+const GEMINI_API_KEY = "YOUR-API-KEY";   // <- put your key
 const DEFAULT_MODEL = "openai"; // "openai" or "gemini"
 /***********************************************/
 
@@ -286,3 +286,4 @@ function speakText(text) {
   utterance.lang = "en-US";
   window.speechSynthesis.speak(utterance);
 }
+
