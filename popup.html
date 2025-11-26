@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Smart Dictionary</title>
+    <style>
+      :root {
+        --bg: #050816;
+        --card-bg: #050816;
+        --text-main: #ffffff;
+        --text-muted: #9ca3af;
+        --accent: #60a5fa;
+        --accent-soft: #1e293b;
+        --border-subtle: #1f2933;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 12px;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background: radial-gradient(circle at top, #111827 0, #020617 60%);
+        color: var(--text-main);
+        width: 360px;
+      }
+
+      .card {
+        border-radius: 18px;
+        overflow: hidden;
+        background: radial-gradient(circle at top, #0f172a 0, #020617 60%);
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
+        border: 1px solid rgba(148, 163, 184, 0.12);
+      }
+
+      .hero {
+        position: relative;
+        height: 130px;
+        overflow: hidden;
+      }
+
+      .hero img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .hero-gradient {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          rgba(15, 23, 42, 0.3),
+          rgba(15, 23, 42, 1)
+        );
+      }
+
+      .card-body {
+        padding: 14px 16px 14px 16px;
+      }
+
+      .top-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        align-items: flex-start;
+      }
+
+      .word-block {
+        max-width: 250px;
+      }
+
+      #wordDisplay {
+        font-size: 25px;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+      }
+
+      .ipa-pos {
+        margin-top: 2px;
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        font-size: 15px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+
+      #ipa {
+        letter-spacing: 0.06em;
+      }
+
+      .pos-tag {
+        padding: 2px 6px;
+        border-radius: 999px;
+        background: rgba(148, 163, 184, 0.12);
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        font-size: 13px;
+      }
+
+      .model-select {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 4px;
+      }
+
+      .model-label {
+        font-size: 9px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        letter-spacing: 0.12em;
+      }
+
+      #modelSelect {
+        background: rgba(15, 23, 42, 0.9);
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        color: var(--text-main);
+        font-size: 11px;
+        padding: 4px 8px;
+        outline: none;
+      }
+
+      .input-row {
+        margin-top: 10px;
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+
+      #inputText {
+        flex: 1;
+        background: rgba(15, 23, 42, 0.9);
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        padding: 6px 10px;
+        font-size: 15px;
+        color: var(--text-main);
+        outline: none;
+      }
+
+      #lookupBtn {
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: none;
+        font-size: 11px;
+        background: linear-gradient(to right, #3b82f6, #a855f7);
+        color: white;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+
+      #lookupBtn:active {
+        transform: translateY(1px);
+      }
+
+      .section-title {
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 0.18em;
+        color: var(--text-muted);
+        margin-top: 12px;
+        margin-bottom: 3px;
+      }
+
+      .definition-text {
+        font-size: 15px;
+        line-height: 1.4;
+      }
+
+      .bangla-text {
+        font-size: 15px;
+        margin-top: 2px;
+      }
+
+      #sentences {
+        padding-left: 14px;
+        margin: 4px 0 0 0;
+        font-size: 15px;
+      }
+
+      #sentences li {
+        margin-bottom: 4px;
+      }
+
+      .bottom-row {
+        margin-top: 10px;
+        padding-top: 8px;
+        border-top: 1px solid rgba(148, 163, 184, 0.18);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      .syn-ant {
+        font-size: 12px;
+        line-height: 1.4;
+      }
+
+      .syn-ant-label {
+        text-transform: uppercase;
+        color: var(--text-muted);
+        letter-spacing: 0.14em;
+      }
+
+      #synonyms,
+      #antonyms {
+        font-size: 13px;
+        margin-top: 2px;
+      }
+
+      #synonyms span,
+      #antonyms span {
+        opacity: 0.92;
+      }
+
+      .speak-btn {
+        border-radius: 999px;
+        width: 32px;
+        height: 32px;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(37, 99, 235, 0.18);
+        cursor: pointer;
+      }
+
+      .speak-btn span {
+        font-size: 16px;
+      }
+
+      .speak-btn:active {
+        transform: translateY(1px);
+      }
+
+      #error {
+        margin-top: 6px;
+        font-size: 11px;
+        color: #f97373;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="hero">
+        <img src="sunrise.png" alt="sunrise" />
+        <div class="hero-gradient"></div>
+      </div>
+
+      <div class="card-body">
+        <div class="top-row">
+          <div class="word-block">
+            <div id="wordDisplay">Word</div>
+            <div class="ipa-pos">
+              <span id="ipa">/ˈwɜːd/</span>
+              <span id="posTag" class="pos-tag">NOUN</span>
+            </div>
+          </div>
+          <div class="model-select">
+            <div class="model-label">Model</div>
+            <select id="modelSelect">
+              <option value="openai">OpenAI</option>
+              <option value="gemini">Gemini</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="input-row">
+          <input
+            id="inputText"
+            placeholder="Select a word or type here..."
+          />
+          <button id="lookupBtn">Lookup</button>
+        </div>
+
+        <div class="section-title">Definition</div>
+        <div id="definition" class="definition-text"></div>
+
+        <div class="section-title">Bangla Translation</div>
+        <div id="bangla" class="bangla-text"></div>
+
+        <div class="section-title">Example Sentences</div>
+        <ol id="sentences"></ol>
+
+        <div class="bottom-row">
+          <div class="syn-ant">
+            <div class="syn-ant-label">Synonyms</div>
+            <div id="synonyms"></div>
+            <div class="syn-ant-label" style="margin-top: 4px;">Antonyms</div>
+            <div id="antonyms"></div>
+          </div>
+
+          <button id="speakBtn" class="speak-btn" title="Play audio">
+            <span>🔊</span>
+          </button>
+        </div>
+
+        <div id="error"></div>
+      </div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Smart Dictionary (EN → Bangla)",
+  "version": "1.1",
+  "description": "Select a word, hit a shortcut, and get definition, Bangla translation, examples, synonyms, antonyms.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://api.openai.com/*",
+    "https://generativelanguage.googleapis.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Smart Dictionary"
+  },
+  "commands": {
+    "lookup-selection": {
+      "suggested_key": {
+        "default": "Alt+K"
+      },
+      "description": "Look up the selected word or phrase"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}
